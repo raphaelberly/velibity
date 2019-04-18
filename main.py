@@ -41,7 +41,6 @@ if __name__ == '__main__':
     # Run scraper
     with run_driver(**conf_driver) as driver:
         scraper = VelibScraper(driver=driver, credentials=credentials, **conf_scraper)
-        scraper.login()
-        # scraper.run()
+        scraper.run()
 
     LOGGER.info('Done scraping')

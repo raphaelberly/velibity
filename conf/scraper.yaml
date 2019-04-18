@@ -1,5 +1,4 @@
 
 urls:
   login: https://www.velib-metropole.fr/fr/login
-
-
+  trips: https://www.velib-metropole.fr/private/account#/my-runs
