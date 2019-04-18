@@ -1,0 +1,5 @@
+
+docker_image: selenium/standalone-chrome:3.141.59-copernicium
+
+driver_lang: fr
+driver_size: "--window-size=300,800"
