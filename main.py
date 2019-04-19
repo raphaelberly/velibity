@@ -31,16 +31,12 @@ if __name__ == '__main__':
     conf_scraper = yaml.load(open(args.scraper), Loader=yaml.SafeLoader)
     conf_driver = yaml.load(open(args.driver), Loader=yaml.SafeLoader)
     credentials = yaml.load(open(args.credentials), Loader=yaml.SafeLoader)
-    try:
-        credentials = credentials[args.user]
-    except IndexError:
-        LOGGER.error(f'User {args.user} not found in {args.credentials}')
 
     LOGGER.info(f'Starting scraper for user {args.user}')
 
     # Run scraper
     with run_driver(**conf_driver) as driver:
-        scraper = VelibScraper(driver=driver, credentials=credentials, **conf_scraper)
+        scraper = VelibScraper(driver, args.user, credentials, **conf_scraper)
         scraper.run()
 
     LOGGER.info('Done scraping')

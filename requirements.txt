@@ -3,3 +3,5 @@ docker
 urllib3
 pyyaml
 bs4
+psycopg2-binary
+toolz
