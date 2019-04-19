@@ -83,8 +83,11 @@ class VelibScraper(object):
         return int(search.group('min') or 0) * 60 + int(search.group('sec') or 0)
 
     def content_parser(self, content_generator):
+        stop = False
         # Parse each page successively
         for page_soup in content_generator:
+            if stop is True:
+                break
             trips = page_soup.findAll('div', attrs={'class': 'container runs'})
             for trip in trips:
                 parsed_trip = {
@@ -93,7 +96,11 @@ class VelibScraper(object):
                     'distance_km': self._get_distance(trip),
                     'duration_s': self._get_duration(trip),
                 }
-                yield parsed_trip
+                if parsed_trip['datetime'] <= self.last_trip_datetime:
+                    stop = True
+                    break
+                else:
+                    yield parsed_trip
 
     @staticmethod
     def _get_connection_string(host, port, db, user, password):
