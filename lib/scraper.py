@@ -24,6 +24,8 @@ class VelibScraper(object):
         self.urls = urls
         self.table_name = table_name
 
+        self.last_trip_datetime = self._get_last_trip_datetime()
+
     # GET A WEBPAGE
     def get_page(self, url):
         self.driver.get(url)
@@ -96,6 +98,13 @@ class VelibScraper(object):
     @staticmethod
     def _get_connection_string(host, port, db, user, password):
         return f"host='{host}' dbname='{db}' port={port} user='{user}' password='{password}'"
+
+    def _get_last_trip_datetime(self):
+        with psycopg2.connect(self._get_connection_string(**self._credentials['db'])) as conn:
+            cur = conn.cursor()
+            query = f"SELECT max(datetime) FROM {self.table_name} WHERE username='{self.username}'"
+            cur.execute(query)
+            return cur.fetchone()[0]
 
     def _drop_existing(self, conn):
         LOGGER.info(f'Deleting existing data')
