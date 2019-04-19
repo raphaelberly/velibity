@@ -113,13 +113,6 @@ class VelibScraper(object):
             cur.execute(query)
             return cur.fetchone()[0]
 
-    def _drop_existing(self, conn):
-        LOGGER.info(f'Deleting existing data')
-        cur = conn.cursor()
-        query = f"DELETE FROM {self.table_name} WHERE username='{self.username}'"
-        cur.execute(query)
-        cur.close()
-
     @staticmethod
     def _get_insert_query(table_name, trip_dict):
         key_str = ','.join(trip_dict.keys())
@@ -128,8 +121,6 @@ class VelibScraper(object):
 
     def trips_uploader(self, values_generator, batch_size=1):
         with psycopg2.connect(self._get_connection_string(**self._credentials['db'])) as conn:
-            # Erase day if already existing in the database
-            self._drop_existing(conn)
             # Take care of logging
             LOGGER.info('Scraping data and uploading it to database')
             tqdm_kwargs = {'desc': '> scraping', 'unit': ' trips processed'}
