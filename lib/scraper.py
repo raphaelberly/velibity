@@ -1,5 +1,6 @@
 import logging
 import re
+from base64 import b64decode
 from datetime import datetime
 from functools import partial
 from time import sleep
@@ -40,11 +41,13 @@ class VelibScraper(object):
         # Get the login page
         self.get_page(url=self.urls['login'])
         # Submit the credentials
-        username = self.driver.find_element_by_name("_username")
-        password = self.driver.find_element_by_name("_password")
-        username.send_keys(self._credentials['users'][self.username]['username'])
-        password.send_keys(self._credentials['users'][self.username]['password'])
-        password.submit()
+        username_element = self.driver.find_element_by_name("_username")
+        password_element = self.driver.find_element_by_name("_password")
+        _username = self._credentials['users'][self.username]['username']
+        _password = str(b64decode(self._credentials['users'][self.username]['password']))
+        username_element.send_keys(_username)
+        password_element.send_keys(_password)
+        password_element.submit()
         sleep(3)
 
     def content_loader(self):
