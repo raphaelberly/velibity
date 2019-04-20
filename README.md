@@ -32,7 +32,8 @@ the driver configuration file (`conf/driver.yaml` per default). Such an image ca
 
 ### Running the scraper
 
-The file `main.py` may be run in order to run the scraper. It has one required argument `--user`.
+The file `main.py` may be run in order to run the scraper. It has no required argument. 
+If `--user` is not specified, all users will be scraped for.
 
 Example bash command:
 

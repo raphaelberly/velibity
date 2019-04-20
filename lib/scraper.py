@@ -41,13 +41,16 @@ class VelibScraper(object):
         # Get the login page
         self.get_page(url=self.urls['login'])
         # Submit the credentials
-        username_element = self.driver.find_element_by_name("_username")
-        password_element = self.driver.find_element_by_name("_password")
-        _username = self._credentials['users'][self.username]['username']
-        _password = str(b64decode(self._credentials['users'][self.username]['password']))
-        username_element.send_keys(_username)
-        password_element.send_keys(_password)
-        password_element.submit()
+        username = self.driver.find_element_by_name("_username")
+        password = self.driver.find_element_by_name("_password")
+        username.send_keys(self._credentials['website']['username'])
+        password.send_keys(str(b64decode(self._credentials['website']['password'])))
+        password.submit()
+        sleep(3)
+
+    def logout(self):
+        LOGGER.info('Logging out')
+        self.get_page(url=self.urls['logout'])
         sleep(3)
 
     def content_loader(self):
@@ -145,3 +148,4 @@ class VelibScraper(object):
         content_generator = self.content_loader()
         trip_generator = self.content_parser(content_generator)
         self.trips_uploader(trip_generator, BATCH_SIZE)
+        self.logout()
