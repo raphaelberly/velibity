@@ -96,7 +96,7 @@ class VelibScraper(object):
                     'distance_km': self._get_distance(trip),
                     'duration_s': self._get_duration(trip),
                 }
-                if self.last_trip_datetime and parsed_trip['datetime'] <= self.last_trip_datetime:
+                if self.last_trip_datetime and parsed_trip['start_datetime'] <= self.last_trip_datetime:
                     stop = True
                     break
                 else:
