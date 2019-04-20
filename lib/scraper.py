@@ -92,11 +92,11 @@ class VelibScraper(object):
             for trip in trips:
                 parsed_trip = {
                     'username': self.username,
-                    'datetime': self._get_timestamp(trip),
+                    'start_datetime': self._get_timestamp(trip),
                     'distance_km': self._get_distance(trip),
                     'duration_s': self._get_duration(trip),
                 }
-                if parsed_trip['datetime'] <= self.last_trip_datetime:
+                if self.last_trip_datetime and parsed_trip['datetime'] <= self.last_trip_datetime:
                     stop = True
                     break
                 else:
@@ -109,7 +109,7 @@ class VelibScraper(object):
     def _get_last_trip_datetime(self):
         with psycopg2.connect(self._get_connection_string(**self._credentials['db'])) as conn:
             cur = conn.cursor()
-            query = f"SELECT max(datetime) FROM {self.table_name} WHERE username='{self.username}'"
+            query = f"SELECT max(start_datetime) FROM {self.table_name} WHERE username='{self.username}'"
             cur.execute(query)
             return cur.fetchone()[0]
 
