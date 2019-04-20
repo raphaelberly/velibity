@@ -45,7 +45,7 @@ class VelibScraper(object):
         username.send_keys(self._credentials['users'][self.username]['username'])
         password.send_keys(self._credentials['users'][self.username]['password'])
         password.submit()
-        sleep(2)
+        sleep(3)
 
     def content_loader(self):
         # Load URLs page
@@ -62,7 +62,7 @@ class VelibScraper(object):
             else:
                 LOGGER.debug(f'Loading content from page {button_value}')
                 button.click()
-                sleep(1)
+                sleep(3)
                 yield self.get_soup()
 
     @staticmethod
