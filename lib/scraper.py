@@ -44,7 +44,7 @@ class VelibScraper(object):
         username = self.driver.find_element_by_name("_username")
         password = self.driver.find_element_by_name("_password")
         username.send_keys(self._credentials['website']['username'])
-        password.send_keys(str(b64decode(self._credentials['website']['password'])))
+        password.send_keys(b64decode(self._credentials['website']['password']).decode('utf-8'))
         password.submit()
         sleep(3)
 
