@@ -46,19 +46,19 @@ class VelibScraper(object):
         username.send_keys(self._credentials['website']['username'])
         password.send_keys(b64decode(self._credentials['website']['password']).decode('utf-8'))
         password.submit()
-        sleep(3)
+        sleep(5)
 
     def logout(self):
         LOGGER.info('Logging out')
         self.get_page(url=self.urls['logout'])
-        sleep(3)
+        sleep(5)
 
     def content_loader(self):
         # Load URLs page
         self.get_page(self.urls['trips'])
-        sleep(10)
+        sleep(12)
         # Click on each page button successively and yield resulting page source
-        page_buttons = self.driver.find_elements_by_class_name('page-item')
+        page_buttons = self.driver.find_elements_by_class_name('page-link')
         for button in page_buttons:
             button_value = button.text.strip()
             try:
@@ -68,7 +68,7 @@ class VelibScraper(object):
             else:
                 LOGGER.debug(f'Loading content from page {button_value}')
                 button.click()
-                sleep(3)
+                sleep(5)
                 yield self.get_soup()
 
     @staticmethod
