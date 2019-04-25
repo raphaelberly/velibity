@@ -11,7 +11,6 @@ from lib.scraper import VelibScraper
 # Logging setup
 configure_logging()
 LOGGER = logging.getLogger(__name__)
-LOGGER.setLevel(logging.INFO)
 
 DEFAULT_DRIVER = 'conf/driver.yaml'
 DEFAULT_SCRAPER = 'conf/scraper.yaml'
