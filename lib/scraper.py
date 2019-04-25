@@ -56,20 +56,24 @@ class VelibScraper(object):
     def content_loader(self):
         # Load URLs page
         self.get_page(self.urls['trips'])
-        sleep(12)
-        # Click on each page button successively and yield resulting page source
-        page_buttons = self.driver.find_elements_by_class_name('page-link')
-        for button in page_buttons:
-            button_value = button.text.strip()
-            try:
-                button_value = int(button_value[0])
-            except ValueError:
-                pass
+        sleep(8)
+        i = 1
+        # Click on "Next" button and yield until it is deactivated
+        while True:
+            # Find "Next" button
+            next_button = self.driver.find_elements_by_class_name('page-link')[-2]
+            assert next_button.text.strip() == '»', 'Could not find "Next" button on page'
+            LOGGER.debug(f'Loading content from page {i}')
+            yield self.get_soup()
+            # Find disabled buttons
+            disabled_buttons = self.driver.find_elements_by_class_name('disabled')
+            disabled_buttons_value = [item.text.strip() for item in disabled_buttons]
+            if '»' in disabled_buttons_value:
+                break
             else:
-                LOGGER.debug(f'Loading content from page {button_value}')
-                button.click()
-                sleep(5)
-                yield self.get_soup()
+                next_button.click()
+                i += 1
+                sleep(3)
 
     @staticmethod
     def _find_div_params(class_name):
