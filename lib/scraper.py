@@ -56,7 +56,7 @@ class VelibScraper(object):
     def content_loader(self):
         # Load URLs page
         self.get_page(self.urls['trips'])
-        sleep(8)
+        sleep(12)
         i = 1
         # Click on "Next" button and yield until it is deactivated
         while True:
@@ -73,7 +73,7 @@ class VelibScraper(object):
             else:
                 next_button.click()
                 i += 1
-                sleep(3)
+                sleep(5)
 
     @staticmethod
     def _find_div_params(class_name):
