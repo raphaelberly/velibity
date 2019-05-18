@@ -22,15 +22,21 @@ trips_with_new_id AS (
     sum((t.start_datetime - t.last_end_datetime >= INTERVAL '5 minutes')::INT * t.id)
       OVER (PARTITION BY t.username ORDER BY t.start_datetime ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS new_id
   FROM trips t
+),
+trips_clean AS (
+  SELECT
+    md5(concat(t.username, t.new_id::TEXT)) AS id,
+    t.username,
+    min(t.insert_datetime)                  AS insert_datetime,
+    min(t.start_datetime)::TIMESTAMP(0)     AS start_datetime,
+    sum(t.distance_km)::NUMERIC(3,1)        AS distance_km,
+    sum(t.duration_s)                       AS duration_s
+  FROM trips_with_new_id t
+  GROUP BY 1,2
 )
 SELECT
-  t.username,
-  min(t.insert_datetime)              AS insert_datetime,
-  min(t.start_datetime)::TIMESTAMP(0) AS start_datetime,
-  sum(t.distance_km)::NUMERIC(3,1)    AS distance_km,
-  sum(t.duration_s)                   AS duration_s
-FROM trips_with_new_id t
-GROUP BY new_id, username
-ORDER BY 1,2
+  t.*
+FROM trips_clean t
+ORDER BY t.start_datetime DESC
 
 );
