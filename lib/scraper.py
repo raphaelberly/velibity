@@ -89,8 +89,8 @@ class VelibScraper(object):
 
     def _get_duration(self, trip):
         string = trip.find(**self._find_div_params('col-3 col-lg-3 runs-item font-weight-bold')).getText().strip()
-        search = re.search(r'((?P<min>\d*)(min))? ?((?P<sec>\d*)(sec)?)', string)
-        return int(search.group('min') or 0) * 60 + int(search.group('sec') or 0)
+        search = re.search(r'((?P<h>\d*)(h))? ?((?P<min>\d*)(min))? ?((?P<sec>\d*)(sec))?', string)
+        return int(search.group('h') or 0) * 3600 + int(search.group('min') or 0) * 60 + int(search.group('sec') or 0)
 
     def content_parser(self, content_generator):
         stop = False
