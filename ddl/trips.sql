@@ -5,6 +5,7 @@ CREATE TABLE velibity.trips (
   username VARCHAR(50) NOT NULL,
   start_datetime TIMESTAMP(0) NOT NULL,
   distance_km FLOAT NOT NULL,
-  duration_s INT NOT NULL
+  duration_s INT NOT NULL,
+  is_elec BOOL NOT NULL
 
 );

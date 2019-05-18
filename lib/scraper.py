@@ -92,6 +92,10 @@ class VelibScraper(object):
         search = re.search(r'((?P<h>\d*)(h))? ?((?P<min>\d*)(min))? ?((?P<sec>\d*)(sec))?', string)
         return int(search.group('h') or 0) * 3600 + int(search.group('min') or 0) * 60 + int(search.group('sec') or 0)
 
+    @staticmethod
+    def _get_bike_type(trip):
+        return trip.find(name='img', attrs={'class': 'velo_elec_bleu'}) is not None
+
     def content_parser(self, content_generator):
         stop = False
         # Parse each page successively
@@ -105,6 +109,7 @@ class VelibScraper(object):
                     'start_datetime': self._get_timestamp(trip),
                     'distance_km': self._get_distance(trip),
                     'duration_s': self._get_duration(trip),
+                    'is_elec': self._get_bike_type(trip),
                 }
                 if self.last_trip_datetime and parsed_trip['start_datetime'] <= self.last_trip_datetime:
                     stop = True
