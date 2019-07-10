@@ -46,12 +46,15 @@ class VelibScraper(object):
         username.send_keys(self._credentials['website']['username'])
         password.send_keys(b64decode(self._credentials['website']['password']).decode('utf-8'))
         password.submit()
-        sleep(5)
+        sleep(8)
+        # Assert logged in
+        if 'error.login' in self.driver.current_url:
+            raise PermissionError(f'Could not log in with user "{self.username}"')
 
     def logout(self):
         LOGGER.info('Logging out')
         self.get_page(url=self.urls['logout'])
-        sleep(5)
+        sleep(10)
 
     def content_loader(self):
         # Load URLs page

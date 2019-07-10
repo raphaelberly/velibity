@@ -47,6 +47,9 @@ if __name__ == '__main__':
             # Run the scraper
             LOGGER.info(f'Starting scraper for user {user}')
             scraper = VelibScraper(driver, user, user_credentials, **conf_scraper)
-            scraper.run()
+            try:
+                scraper.run()
+            except PermissionError as e:
+                LOGGER.warning(str(e))
 
     LOGGER.info('Done scraping')
