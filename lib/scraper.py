@@ -100,11 +100,8 @@ class VelibScraper(object):
         return trip.find(name='img', attrs={'class': 'velo_elec_bleu'}) is not None
 
     def content_parser(self, content_generator):
-        stop = False
         # Parse each page successively
         for page_soup in content_generator:
-            if stop is True:
-                break
             trips = page_soup.findAll('div', attrs={'class': 'container runs'})
             for trip in trips:
                 parsed_trip = {
@@ -115,10 +112,12 @@ class VelibScraper(object):
                     'is_elec': self._get_bike_type(trip),
                 }
                 if self.last_trip_datetime and parsed_trip['start_datetime'] <= self.last_trip_datetime:
-                    stop = True
                     break
                 else:
                     yield parsed_trip
+            else:
+                continue  # Continue if the inner loop was not broken
+            break  # If it was, propagate the break to avoid more content to be loaded
 
     @staticmethod
     def _get_connection_string(host, port, db, user, password):
