@@ -74,6 +74,7 @@ class VelibScraper(object):
             if '»' in disabled_buttons_value:
                 break
             else:
+                self.driver.execute_script(f"window.scrollTo(0, {next_button.location['y']})")
                 next_button.click()
                 i += 1
                 sleep(5)
