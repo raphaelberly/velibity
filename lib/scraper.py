@@ -65,7 +65,8 @@ class VelibScraper(object):
         while True:
             # Find "Next" button
             next_button = self.driver.find_elements_by_class_name('page-link')[-2]
-            assert next_button.text.strip() == '»', 'Could not find "Next" button on page'
+            if next_button.text.strip() != '»':
+                raise RuntimeError('Could not find "Next" button on page')
             LOGGER.debug(f'Loading content from page {i}')
             yield self.get_soup()
             # Find disabled buttons
@@ -105,7 +106,9 @@ class VelibScraper(object):
     def content_parser(self, content_generator):
         # Parse each page successively
         for page_soup in content_generator:
-            trips = page_soup.findAll('div', attrs={'class': 'container runs'})
+            trips = page_soup.findAll('div', attrs={'class': 'runs'})
+            if not trips:
+                raise RuntimeError('Could not find trips to collect on page')
             for trip in trips:
                 parsed_trip = {
                     'username': self.username,
